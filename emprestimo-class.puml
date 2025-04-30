@@ -1,0 +1,119 @@
+@startuml emprestimo
+
+left to right direction
+
+class Usuario {
+    - id: int
+    - nome: String
+    - email: String
+    + autenticar(): boolean
+}
+
+class Aluno {
+    - matricula: String
+    + solicitarEmprestimo(recurso: RecursoReservavel): Emprestimo
+    + devolverRecurso(emprestimo: Emprestimo): boolean
+}
+
+class Professor {
+    - siape: String
+    + solicitarEmprestimo(recurso: RecursoReservavel): Emprestimo
+}
+
+class Assistente {
+    - cpf:
+    + aprovarEmprestimo(e: Emprestimo): void
+    + analisarDano(dano: DanosPerda): void
+    + registrarAchado(ap: AchadoPerdido): void
+    + aprovarProrrogacao(p: Prorrogacao): void
+}
+
+abstract class RecursoReservavel {
+    - id: int
+    - nome: String
+    - tipo: String
+    + estaDisponivel(): boolean
+}
+
+class Material {
+    - numeroPatrimonio: String
+    - estadoConservacao: String
+    + atualizarEstado(estado: String): void
+}
+
+class Sala {
+    - numero: String
+    - capacidade: int
+    + verificarAgendamento(dataHora: Date): boolean
+}
+
+class Emprestimo {
+    - id: int
+    - dataEmprestimo: Date
+    - dataDevolucaoPrevista: Date
+    - dataDevolucaoReal: Date
+    - status: String
+    + registrarDevolucao(): void
+    + solicitarProrrogacao(dataNova: Date): Prorrogacao
+    + gerarTermo(): TermoEmprestimo
+}
+
+class ItemEmprestado {
+    - id: int
+    - quantidade: int
+}
+
+class AchadoPerdido {
+    - id: int
+    - descricao: String
+    - localEncontrado: String
+    - dataHora: Date
+    - status: String
+    + marcarComoDevolvido(): void
+}
+
+class Prorrogacao {
+    - id: int
+    - novaData: Date
+    - aprovado: boolean
+    + aprovar(): void
+    + rejeitar(): void
+}
+
+class DanosPerda {
+    - id: int
+    - descricao: String
+    - tipo: String
+    - resolvido: boolean
+    + registrarRessarcimento(): void
+    + marcarComoResolvido(): void
+}
+
+class TermoEmprestimo {
+    - id: int
+    - dataAssinatura: Date
+    - tipo: String
+    - viaEletronica: boolean
+    + assinarDigitalmente(): void
+}
+
+Usuario <|-- Aluno
+Usuario <|-- Professor
+Usuario <|-- Assistenteko
+
+
+
+RecursoReservavel <|-- Material
+RecursoReservavel <|-- Sala
+
+Emprestimo "1" <-- "1" Usuario : realizadoPor
+Emprestimo "1" <-- "1..*" RecursoReservavel
+Emprestimo "0..1" <-- "0..1" Prorrogacao
+Emprestimo "0..1" <-- "0..1" DanosPerda
+Emprestimo "0..1" <-- "0..1" TermoEmprestimo
+
+ItemEmprestado "1" <-- "1" Material
+
+AchadoPerdido "1" <-- "1" Usuario : encontradoPor
+
+@enduml

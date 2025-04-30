@@ -1,0 +1,24 @@
+@startuml reserva
+
+actor client as "Cliente"
+actor admin as "Administrador"
+
+
+rectangle "Sistema de reserva" {
+    usecase "consultar calendario" as UC1
+    usecase "buscar reserva" as UC2
+    usecase "realizar reserva" as UC3
+    usecase "verificar disponibilidade" as UC4
+    usecase "cancelar reserva" as UC5
+    usecase "cancelar reserva" as UC6
+    usecase "gerenciar todas reservas" as UC7
+    usecase "cadastrar quadra" as UC8
+}
+
+cli --> UC1
+cli --> UC2
+cli --> UC3
+cli --> UC4 
+cli --> UC5 
+
+@enduml
